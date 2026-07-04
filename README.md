@@ -9,6 +9,7 @@ A simple command-line todo app built with Python. It lets you add, view, edit, a
 - Edit an existing todo
 - Complete and remove a todo
 - Save todos between runs using a text file
+- Use helper functions to read and write todo data
 
 ## Requirements
 
@@ -58,6 +59,7 @@ Goodbye!
 
 ```text
 todo_app/
+├── functions.py
 ├── main.py
 ├── todos.txt
 └── README.md
@@ -66,3 +68,5 @@ todo_app/
 ## Notes
 
 The app reads from and writes to `todos.txt`, so keep that file in the same folder as `main.py`.
+
+`main.py` handles the command-line interaction, while `functions.py` contains the helper functions for reading from and writing to the todo file.
