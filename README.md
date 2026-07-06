@@ -22,13 +22,13 @@ No external packages are required.
 From the project folder, run:
 
 ```bash
-python main.py
+python cli.py
 ```
 
 Depending on your system, you may need:
 
 ```bash
-python3 main.py
+python3 cli.py
 ```
 
 ## Commands
