@@ -1,9 +1,10 @@
 # Todo App
 
-A simple Python todo app with three ways to use it:
+A simple Python todo app with four ways to use it:
 
-- **GUI** — desktop window built with [FreeSimpleGUI](https://github.com/spyoungtech/FreeSimpleGUI)
 - **CLI** — interactive terminal interface
+- **GUI** — desktop window built with [FreeSimpleGUI](https://github.com/spyoungtech/FreeSimpleGUI)
+- **Web** — browser interface built with [Streamlit](https://streamlit.io/)
 - **macOS app** — double-clickable `Todo.app` bundle
 
 Todos are stored in a plain `todos.txt` file and persist between runs.
@@ -12,13 +13,15 @@ Todos are stored in a plain `todos.txt` file and persist between runs.
 
 - Add, view, edit, and complete todo items
 - Live clock in the GUI
+- Web interface with checkboxes to complete todos
 - Shared read/write helpers in `functions.py`
 - Automatic creation of `todos.txt` on first run
 
 ## Requirements
 
 - Python 3.14+
-- FreeSimpleGUI (GUI only)
+- FreeSimpleGUI (GUI and macOS app)
+- Streamlit (web interface)
 
 Install dependencies with [uv](https://github.com/astral-sh/uv):
 
@@ -26,27 +29,41 @@ Install dependencies with [uv](https://github.com/astral-sh/uv):
 uv sync
 ```
 
+Add a new package with uv:
+
+```bash
+uv add package-name
+```
+
 Or with pip:
 
 ```bash
-pip install freesimplegui
+pip install freesimplegui streamlit
 ```
 
 ## How to Run
 
-### GUI
-
-From the project directory:
-
-```bash
-python gui.py
-```
+Run commands from the project directory. With uv, you do not need to activate the virtual environment first.
 
 ### CLI
 
 ```bash
-python cli.py
+uv run python cli.py
 ```
+
+### GUI
+
+```bash
+uv run python gui.py
+```
+
+### Web
+
+```bash
+uv run streamlit run web.py
+```
+
+Streamlit opens the app in your browser, usually at `http://localhost:8501`.
 
 ### macOS App
 
@@ -86,23 +103,25 @@ Goodbye!
 4. Select a todo and click **Complete** to remove it.
 5. Click **Exit** or close the window to quit.
 
+## Web Usage
+
+1. Open the app with `uv run streamlit run web.py`.
+2. Type a new todo in the input box at the bottom and press Enter to add it.
+3. Check a todo's checkbox to mark it complete and remove it from the list.
+
 ## Data Storage
 
-`functions.py` stores todos in a file next to itself:
+`functions.py` resolves the todo file path based on how the app is running:
 
-```python
-BASEDIR = os.path.dirname(os.path.abspath(__file__))
-FILEPATH = os.path.join(BASEDIR, "todos.txt")
-```
-
-That keeps file paths reliable regardless of the current working directory — important when the app is launched as a macOS bundle.
+- From the project folder, todos are saved next to `functions.py`.
+- From the macOS app bundle, todos are saved in Application Support.
 
 | How you run the app | Where todos are saved |
 |---|---|
-| `python gui.py` or `python cli.py` | `./todos.txt` (project root) |
-| `Todo.app` | `Todo.app/Contents/Resources/todos.txt` |
+| `python cli.py`, `python gui.py`, or `streamlit run web.py` | `./todos.txt` (project root) |
+| `Todo.app` | `~/Library/Application Support/Todo/todos.txt` |
 
-The CLI and GUI share the same file when run from the project folder. The bundled macOS app uses its own copy inside the app bundle.
+The CLI, GUI, and web app share the same file when run from the project folder. The bundled macOS app uses its own storage location.
 
 If you rebuild `Todo.app`, make sure the updated `functions.py` is included in the bundle.
 
@@ -110,8 +129,9 @@ If you rebuild `Todo.app`, make sure the updated `functions.py` is included in t
 
 ```text
 todo_app/
-├── gui.py              # GUI entry point
 ├── cli.py              # CLI entry point
+├── gui.py              # GUI entry point
+├── web.py              # Streamlit web entry point
 ├── functions.py        # Read/write helpers and file path logic
 ├── todos.txt           # Todo storage (created automatically)
 ├── Todo.app/           # macOS app bundle
@@ -119,7 +139,8 @@ todo_app/
 │       └── Resources/
 │           ├── script        # Bundled GUI script
 │           ├── functions.py  # Bundled helpers
-│           └── todos.txt     # Todo storage for the app bundle
+│           └── todos.txt     # Legacy todo storage (migrated on first run)
 ├── pyproject.toml
+├── uv.lock
 └── README.md
 ```
