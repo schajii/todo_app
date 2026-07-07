@@ -1,49 +1,58 @@
 # Todo App
 
-A simple command-line todo app built with Python. It lets you add, view, edit, and complete todo items, storing them in a local `todos.txt` file.
+A simple Python todo app with two interfaces: a **command-line interface (CLI)** and a **graphical user interface (GUI)**. Todos are stored locally in a `todos.txt` file and persist between runs.
 
 ## Features
 
 - Add new todo items
-- Show all saved todos
+- View all saved todos
 - Edit an existing todo
-- Complete and remove a todo
-- Save todos between runs using a text file
-- Use helper functions to read and write todo data
+- Mark a todo as complete (removes it from the list)
+- Live clock display in the GUI
+- Persistent storage via `todos.txt`
 
 ## Requirements
 
-- Python 3
+- Python 3.14+
+- [FreeSimpleGUI](https://github.com/spyoungtech/FreeSimpleGUI) (for the GUI)
 
-No external packages are required.
+Install dependencies using [uv](https://github.com/astral-sh/uv):
+
+```bash
+uv sync
+```
+
+Or with pip:
+
+```bash
+pip install freesimplegui
+```
 
 ## How to Run
 
-From the project folder, run:
+### GUI
+
+```bash
+python gui.py
+```
+
+### CLI
 
 ```bash
 python cli.py
 ```
 
-Depending on your system, you may need:
-
-```bash
-python3 cli.py
-```
-
-## Commands
-
-Use these commands when the app asks for input:
+## CLI Commands
 
 ```text
-add Buy groceries
-show
-edit 1
-complete 1
-exit
+add <todo>     Add a new todo item
+show           List all todos with their numbers
+edit <number>  Edit the todo at the given number
+complete <n>   Remove the todo at the given number
+exit           Quit the app
 ```
 
-## Example
+### Example
 
 ```text
 Type add or show, edit, complete or exit: add Learn Python
@@ -59,14 +68,14 @@ Goodbye!
 
 ```text
 todo_app/
-├── functions.py
-├── main.py
-├── todos.txt
+├── gui.py          # GUI interface (FreeSimpleGUI)
+├── cli.py          # Command-line interface
+├── functions.py    # Shared helpers for reading/writing todos.txt
+├── todos.txt       # Persistent todo storage
+├── pyproject.toml
 └── README.md
 ```
 
 ## Notes
 
-The app reads from and writes to `todos.txt`, so keep that file in the same folder as `main.py`.
-
-`main.py` handles the command-line interaction, while `functions.py` contains the helper functions for reading from and writing to the todo file.
+Both `gui.py` and `cli.py` share the same `functions.py` helpers and the same `todos.txt` file, so todos created in one interface are visible in the other.
